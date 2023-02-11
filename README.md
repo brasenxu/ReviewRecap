@@ -19,6 +19,8 @@
 - [Table of Contents](#table-of-contents)
 - [About](#about)
 - [Installation/Usage](#installationusage)
+  - [Chrome Extension](#chrome-extension)
+  - [Backend Server](#backend-server)
 
 # About
 
@@ -28,4 +30,8 @@ The backend of the server projects uses Python's Django framework to serve a RES
 
 # Installation/Usage
 
-To be added.
+**Note: to install and use ReviewRecap, you must set up BOTH the Chrome extension and the backend server!**
+
+## Chrome Extension
+
+## Backend Server
