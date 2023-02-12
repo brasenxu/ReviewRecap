@@ -43,7 +43,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     let b64 = "";
     let url = tabs[0].url.split("amazon.")[1].split("/");
 
-    if (url.includes("dp")) {
+    if (url.indexOf("dp") === 2) {
         b64 = btoa(`${url[0]}/${url[2]}/${url[3]}`);
     } else {
         b64 = btoa(`${url[0]}/${url[1]}/${url[2]}`);
