@@ -1,5 +1,5 @@
 body {
-    width: 500px;
+    width: 530px;
     height: 200px;
     padding: 20px;
     font-family: Arial, sans-serif;
@@ -10,13 +10,13 @@ body {
 }
 
 .text {
-    fill: white;
+    fill: black;
 }
 
 .bar-graph {
     margin-top: 20px;
     margin-right: 20px;
-    width: 220px;
+    width: 250px;
     text-align: left;
 }
 

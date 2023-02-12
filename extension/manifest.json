@@ -1,0 +1,25 @@
+{
+    "name": "Review Recap",
+    "version": "0.1.0",
+    "description": "Aggregates product ratings and reviews for easy, informed purchasing decision",
+    "permissions": ["tabs"],
+    "host_permissions": ["http://192.168.96.213:8000/*"],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "icons": {
+        "128": "assets/recapOn.png",
+        "16": "assets/recapOn.png",
+        "48": "assets/recapOn.png"
+    },
+    "action": {
+      "default_icon": {
+        "128": "assets/recapOff.png",
+        "16": "assets/recapOff.png",
+        "48": "assets/recapOff.png"
+      },
+      "default_title": "Review Recap",
+      "default_popup": "popup.html"
+    },
+    "manifest_version": 3
+}

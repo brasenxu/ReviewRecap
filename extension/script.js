@@ -1,82 +1,34 @@
-const dataFromBackend = {
-    "id": "caB09W2JP6SM",
-    "data": [
-        {
-            "keyword": "55",
-            "rating": 5.0,
-            "freq": 50
-        },
-        {
-            "keyword": "44",
-            "rating": 4.0,
-            "freq": 40
-        },
-        {
-            "keyword": "33",
-            "rating": 3.0,
-            "freq": 30
-        },
-        {
-            "keyword": "22",
-            "rating": 2.0,
-            "freq": 20
-        },
-        {
-            "keyword": "11",
-            "rating": 1.0,
-            "freq": 10
+(() => {
+    let isOn = false;
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        let url = tabs[0].url;
+        if (url.includes("amazon.") && url.includes("/dp/")) {
+            chrome.action.setIcon({ path: "assets/recapOn.png" });
+            document.getElementById("section").innerHTML =
+                "Click button to recap Amazon reviews.";
+            document.getElementById("recapButn").innerHTML =
+                '<a href="recap.html" class="btn btn-primary justify-content-center" role="button">RECAP</a>';
+            isOn = true;
+        } else {
+            chrome.action.setIcon({ path: "assets/recapOff.png" });
+            document.getElementById("section").innerHTML =
+                "Current tab is not able to be recapped.";
+            document.getElementById("recapButn").innerHTML =
+                '<a class="btn btn-primary justify-content-center disabled" role="button" aria-disabled="true"> RECAP </a>';
+            isOn = false;
         }
-    ]
-};
+        const indexdp = url.indexOf("/dp/");
 
-const data = dataFromBackend.data;
-  
-const svg = d3.select("svg");
-  
-const xScale = d3
-    .scaleLinear()
-    .domain([0, d3.max(dataFromBackend.data, d => d.freq)])
-    .range([0, 200]);
-  
-svg
-    .selectAll(".bar")
-    .data(dataFromBackend.data)
-    .enter()
-    .append("rect")
-    .attr("class", "bar")
-    .attr("x", 0)
-    .attr("y", (d, i) => i * 30)
-    .attr("width", d => xScale(d.freq))
-    .attr("height", 20);
+        url = url.substring(19, indexdp + 14);
+        const parts = url.split("/");
 
-svg
-    .selectAll(".text")
-    .data(dataFromBackend.data)
-    .enter()
-    .append("text")
-    .attr("class", "text")
-    .attr("x", d => xScale(d.freq) + 5)
-    .attr("y", (d, i) => i * 30 + 15)
-    .text(d => d.freq);
+        if (parts.length == 4) {
+            parts.splice(1, 1);
+        }
 
-d3.select("#keyword-column")
-    .selectAll("p")
-    .data(data)
-    .enter()
-    .append("p")
-    .text(function(d) {
-      return d.keyword;
+        const newURL = parts.join("/");
+        const encodedData = btoa(newURL);
+
+        console.log(encodedData);
     });
-
-
-d3.select("#rating-column")
-    .selectAll("p")
-    .data(data)
-    .enter()
-    .append("p")
-    .text(function(d) {
-        return d.rating;
-    });
-
-
-    
+})();
