@@ -1,66 +1,59 @@
-const getURL = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        let url = tabs[0].url;
-        const indexdp = url.indexOf("/dp/");
-        url = url.substring(19, indexdp + 14);
-        const parts = url.split("/");
+function updateRecap({ data }) {
 
-        if (parts.length == 4) {
-            parts.splice(1, 1);
-        }
+    const svg = d3.select("svg");
+    const xScale = d3
+        .scaleLinear()
+        .domain([0, d3.max(data, (d) => d.freq)])
+        .range([0, 200]);
 
-        const newURL = parts.join("/");
-        const encodedData = btoa(newURL);
+    svg.selectAll(".bar")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", 0)
+        .attr("y", (d, i) => i * 30)
+        .attr("width", (d) => xScale(d.freq))
+        .attr("height", 20);
 
-        fetch(`http://192.168.96.213:8000/product/${encodedData}`)
-            .then((res) => res.json())
-            .then((res) => {
-                const data = res.data;
+    svg.selectAll(".text")
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("class", "text")
+        .attr("x", (d) => xScale(d.freq) + 5)
+        .attr("y", (d, i) => i * 30 + 15)
+        .text((d) => d.freq);
 
-                const svg = d3.select("svg");
-                const xScale = d3
-                    .scaleLinear()
-                    .domain([0, d3.max(res.data, (d) => d.freq)])
-                    .range([0, 200]);
+    d3.select("#keyword-column")
+        .selectAll("p")
+        .data(data)
+        .enter()
+        .append("p")
+        .text((d) => d.keyword);
 
-                svg.selectAll(".bar")
-                    .data(res.data)
-                    .enter()
-                    .append("rect")
-                    .attr("class", "bar")
-                    .attr("x", 0)
-                    .attr("y", (d, i) => i * 30)
-                    .attr("width", (d) => xScale(d.freq))
-                    .attr("height", 20);
+    d3.select("#rating-column")
+        .selectAll("p")
+        .data(data)
+        .enter()
+        .append("p")
+        .text((d) => d.rating);
 
-                svg.selectAll(".text")
-                    .data(res.data)
-                    .enter()
-                    .append("text")
-                    .attr("class", "text")
-                    .attr("x", (d) => xScale(d.freq) + 5)
-                    .attr("y", (d, i) => i * 30 + 15)
-                    .text((d) => d.freq);
+}
 
-                d3.select("#keyword-column")
-                    .selectAll("p")
-                    .data(data)
-                    .enter()
-                    .append("p")
-                    .text(function (d) {
-                        return d.keyword;
-                    });
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
-                d3.select("#rating-column")
-                    .selectAll("p")
-                    .data(data)
-                    .enter()
-                    .append("p")
-                    .text(function (d) {
-                        return d.rating;
-                    });
-            });
-    });
-};
+    let b64 = ""
+    let url = tabs[0].url.split("amazon.")[1].split("/")
 
-getURL();
+    if (url.include("dp")) {
+        b64 = btoa(`${url[0]}/${url[2]}/${url[3]}`);
+    } else {
+        b64 = btoa(`${url[0]}/${url[1]}/${url[2]}`);
+    }
+
+    fetch(`http://192.168.96.213:8000/product/${b64}`)
+        .then((res) => res.json())
+        .then(updateRecap);
+
+});
