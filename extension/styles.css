@@ -1,16 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
 body {
+    margin: 0;
+}
+
+.container {
     width: 530px;
-    height: 200px;
+    height: 270px;
+    background-image: url('assets/17975521.png');
+    background-size: 570px 310px;
     padding: 20px;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    align-content: center;
+    align-items: center;
+
 }
 
 .bar {
-    fill: rebeccapurple;
+    fill: #242f3e;
 }
 
 .text {
-    fill: black;
+    font-family: 'Roboto', sans-serif;
+    color: #131921;
 }
 
 .bar-graph {
@@ -18,25 +31,35 @@ body {
     margin-right: 20px;
     width: 250px;
     text-align: left;
+    color: #131921;
+    font-size: 14px;
 }
 
 .ratings {
-    width: 50px;
+    width: 100px;
     text-align: left;
+    color:#131921;
+    font-size: 14px;
 }
 
 .keywords {
     width: 150px;
     text-align: left;
+    color:#131921;
+    font-size: 14px;
 }
 
 .caption {
     font-size: 36px;
+    text-align: center;
     margin-bottom: 20px;
+    color:#131921;
 }
 
 p {
     height: 15px;
     font-size: 16px;
-    margin: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color:#131921;
 }
