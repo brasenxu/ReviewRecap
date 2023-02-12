@@ -1,11 +1,6 @@
-from scraper import stars_and_reviews
 import cohere
-import pprint
-import time
 
-time_before = time.time()
-
-COHERE_API_KEY = 'c1XR48PwJHn1KVL0ay4MNrSmFhOQKDWi2aDpcmLi'
+from server.env import COHERE_API_KEY
 
 prompt = f"""Passage: It charges fast as advertised. What really sells to me is the size. It is smaller than an iPad charger and charges faster than the MacBook charger. I can charge my headphones, my phone, my iPad and my laptop with a single charger, AND IT FITS. I am a student and I stay on campus in between lectures so not needing a brick for each device is great when I study all day. I definitely recommend this to anyone. I go out of my way to put my friends on it. I even bought one with an EU plug from amazon.nl so I can use it when I go back home. I was so fascinated by how well built it is and how good it works, I went back to repeat my electronics courses to see how it could be done. When I need a cable or an adapter I go to the Anker page before googling it. Even their power strips are my go to.
 
@@ -48,46 +43,50 @@ Passage: Super cute, super soft, super happy! Great for everyday and everyone!
 TLDR: cute, soft, happy
 --"""
 
-new_reviews = {1: [], 2: [], 3: [], 4: [], 5: []}
 
-list_of_keywords = []
-co = cohere.Client(API_KEY)
-for key in stars_and_reviews:
-    for review in stars_and_reviews[key]:
-        custom_prompt = f"{prompt}\nPassage: {review}\n\nTLDR:"
-        response = co.generate(
-            model='medium',
-            prompt=custom_prompt,
-            max_tokens=10,
-            temperature=0.3,
-            stop_sequences=["--"], )
-        keywords = response.generations[0].text.strip("\n--").lstrip(" ").split(", ")
-        new_reviews[key] = new_reviews[key] + keywords
+def run_cohere(stars_and_reviews):
 
+    print("cohere start")
 
-keyword_freq = {}
-useless_keywords = ["disappointed", "angry", "frustrated", "unhappy", "upset", "pleased", "happy", "impressed", "satisfied", "overjoyed", "shocked", "thrilled", "amazed", "delighted", "encouraged", "grateful", "relieved", "great", "good", "nice", "bad", "okay", "fine", "amazing", "horrible", "terrible", "decent", "average", "fantastic", "awful", "perfect", "best", "worst", "excellent", "mediocre", "incredible", "pretty", "poor", "so-so", "wonderful"]
+    new_reviews = {1: [], 2: [], 3: [], 4: [], 5: []}
+    co = cohere.Client(COHERE_API_KEY)
 
+    for key in stars_and_reviews:
+        for review in stars_and_reviews[key]:
+            custom_prompt = f"{prompt}\nPassage: {review}\n\nTLDR:"
+            response = co.generate(
+                model='medium',
+                prompt=custom_prompt,
+                max_tokens=10,
+                temperature=0.3,
+                stop_sequences=["--"])
+            keywords = response.generations[0].text.strip("\n--").lstrip(" ").split(", ")
+            new_reviews[key] = new_reviews[key] + keywords
 
-for star in new_reviews:
-    for keyword in new_reviews[star]:
-        if keyword in keyword_freq:
-            keyword_freq[keyword]['freq'] += 1
-            keyword_freq[keyword]['ratings'] += star
-        else:
-            keyword_freq[keyword] = {'freq': 1,
-                            'ratings': star}
+    keyword_freq = {}
+    useless_keywords = ["disappointed", "angry", "frustrated", "unhappy", "upset", "pleased", "happy", "impressed",
+                        "satisfied", "overjoyed", "shocked", "thrilled", "amazed", "delighted", "encouraged", "grateful",
+                        "relieved", "great", "good", "nice", "bad", "okay", "fine", "amazing", "horrible", "terrible",
+                        "decent", "average", "fantastic", "awful", "perfect", "best", "worst", "excellent", "mediocre",
+                        "incredible", "pretty", "poor", "so-so", "wonderful", "easy"]
 
-keyword_freq = sorted(keyword_freq.items(), key=lambda x: x[1]["freq"], reverse=True)
+    for star in new_reviews:
+        for keyword in new_reviews[star]:
+            if keyword in keyword_freq:
+                keyword_freq[keyword]['freq'] += 1
+                keyword_freq[keyword]['ratings'] += star
+            else:
+                keyword_freq[keyword] = {'freq': 1,
+                                         'ratings': star}
 
-for item in keyword_freq:
-    item[1]['ratings'] = round((item[1]['ratings'] / item[1]['freq']), 1)
+    keyword_freq = sorted(keyword_freq.items(), key=lambda x: x[1]["freq"], reverse=True)
 
-keyword_freq[:] = [item for item in keyword_freq if not item[0] in useless_keywords]
+    for item in keyword_freq:
+        item[1]['ratings'] = round((item[1]['ratings'] / item[1]['freq']), 1)
 
+    keyword_freq[:] = [item for item in keyword_freq if not item[0] in useless_keywords]
+    keyword_freq = keyword_freq[:5]
 
-pprint.pprint(keyword_freq)
+    print("cohere end")
+    return keyword_freq
 
-time_now = time.time()
-
-print(time_now-time_before)

@@ -6,6 +6,8 @@ from rest_framework.response import Response
 
 from .models import Product
 from .serializers import ProductSerializer
+from .parser.scraper import scrape
+from .parser.translator import translate
 
 
 @api_view(["GET"])
@@ -19,9 +21,17 @@ def get_product(request, b64):
     try:
         product = Product.objects.get(pk=name)
     except Product.DoesNotExist:
-        # Replace this part with data parser
-        print(f"https://amazon.{url_parts[0]}/product-reviews/{url_parts[2]}/pageNumber=")
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        print("start search")
+        scrape_res = translate(url_parts[0] + url_parts[2], scrape(url_parts[0], url_parts[2]))
+        print("finish scrape")
+        serializer = ProductSerializer(data=scrape_res)
+        if serializer.is_valid():
+            print("is valid")
+            serializer.save()
+            product = Product.objects.get(pk=name)
+        else:
+            print("not valid")
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
     data = dict(ProductSerializer(product).data)
     return Response({
