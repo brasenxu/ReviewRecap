@@ -12,13 +12,14 @@ from .serializers import ProductSerializer
 def get_product(request, b64):
 
     url = b64decode(b64).decode("utf-8")
-    name = url.split("/")[0] + url.split("/")[3]
+    url_parts = url.split("/")
+    name = url_parts[0] + url_parts[-1]
 
     try:
         product = Product.objects.get(pk=name)
     except Product.DoesNotExist:
         # Replace this part with data parser
-        print(f"https://amazon.{url.replace('/dp/', '/product-reviews/')}/pageNumber=")
+        print(f"https://amazon.{url_parts[0]}/product-reviews/{url_parts[-1]}/pageNumber=")
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     data = dict(ProductSerializer(product).data)
