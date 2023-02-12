@@ -4,7 +4,6 @@ from django.db import models
 class Product(models.Model):
 
     id = models.CharField(max_length=500, primary_key=True)
-    url = models.CharField(max_length=500)
     last_update = models.IntegerField()
 
     keyword1 = models.CharField(max_length=50, default="")
