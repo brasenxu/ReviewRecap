@@ -1,5 +1,4 @@
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-
     let url = tabs[0].url;
 
     if (url.includes("amazon.") && url.includes("/dp/")) {
@@ -7,15 +6,12 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         document.getElementById("section").innerHTML =
             "Click button to recap Amazon reviews.";
         document.getElementById("recapButn").innerHTML =
-            '<a href="recap.html" class="btn btn-primary justify-content-center" role="button">RECAP</a>';
-
+            '<a href="recap.html" class="has-function">RECAP</a>';
     } else {
         chrome.action.setIcon({ path: "assets/recapOff.png" });
         document.getElementById("section").innerHTML =
             "Current tab is not able to be recapped.";
         document.getElementById("recapButn").innerHTML =
-            '<a class="btn btn-primary justify-content-center disabled" role="button" aria-disabled="true">RECAP</a>';
+            '<a class="no-function">RECAP</a>';
     }
-
 });
-
