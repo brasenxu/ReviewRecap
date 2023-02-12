@@ -1,4 +1,5 @@
 function updateRecap({ data }) {
+
     const svg = d3.select("svg");
     const xScale = d3
         .scaleLinear()
@@ -37,6 +38,7 @@ function updateRecap({ data }) {
         .enter()
         .append("p")
         .text((d) => d.rating);
+
 }
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
