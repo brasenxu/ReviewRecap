@@ -1,5 +1,4 @@
 function updateRecap({ data }) {
-
     const svg = d3.select("svg");
     const xScale = d3
         .scaleLinear()
@@ -38,15 +37,13 @@ function updateRecap({ data }) {
         .enter()
         .append("p")
         .text((d) => d.rating);
-
 }
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    let b64 = "";
+    let url = tabs[0].url.split("amazon.")[1].split("/");
 
-    let b64 = ""
-    let url = tabs[0].url.split("amazon.")[1].split("/")
-
-    if (url.include("dp")) {
+    if (url.includes("dp")) {
         b64 = btoa(`${url[0]}/${url[2]}/${url[3]}`);
     } else {
         b64 = btoa(`${url[0]}/${url[1]}/${url[2]}`);
@@ -55,5 +52,4 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     fetch(`http://192.168.96.213:8000/product/${b64}`)
         .then((res) => res.json())
         .then(updateRecap);
-
 });
