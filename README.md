@@ -24,7 +24,7 @@
 
 # About
 
-We are a group of 4 University of Waterloo Math and CS students. This project was made for the uOttaHack 5 hackathon. ReviewRecap targets the challenges issued by the following companies: Noibu, Cohere, GitHub, and Microsoft Cloud.
+We are a group of 4 University of Waterloo Math and CS students. This project was made for the uOttaHack 5 hackathon. ReviewRecap targets the challenges issued by the following companies: Noibu, Cohere, and GitHub.
 
 The backend of the server projects uses Python's Django framework to serve a RESTful API. The frontend is a Chrome extension made with JavaScript.
 
