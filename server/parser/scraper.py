@@ -3,38 +3,32 @@ from urllib.parse import urlencode
 
 import requests
 from bs4 import BeautifulSoup
-from server.env import SCRAPER_API_KEY
 from server.parser.cohere_handler import run_cohere
 
 
-def bs_parser(response):
-
-    return BeautifulSoup(response.text, "html.parser")
-
-
-def get_response(params):
-
-    return requests.get("https://api.scraperapi.com/", params=urlencode(params))
+def bs_parser(params):
+    webpage = requests.get(params['url'], headers=params['header'])
+    return BeautifulSoup(webpage.text, 'html.parser')
 
 
 def scrape(domain, asin):
 
     print("scrape start")
 
+    HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0",
+               "Accept-Encoding": "gzip, deflate",
+               "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "DNT": "1",
+               "Connection": "close", "Upgrade-Insecure-Requests": "1"}
+
     url = f"https://www.amazon.{domain}/product-reviews/{asin}/ref=cm_cr_getr_d_paging_btm_next_3?"
     
     params = []
-    links = []
 
-    for i in range(1, 10):
-        links.append(f"{url}&pageNumber={i}")
-        params.append({"api_key": SCRAPER_API_KEY, "url": f"{url}pageNumber={i}"})
+    for i in range(1, 20):
+        params.append({'url': f"{url}pageNumber={i}", 'header': HEADERS})
 
-    with ThreadPoolExecutor(max_workers=1000) as p:
-        results = p.map(get_response, params)
-
-    with ThreadPoolExecutor(max_workers=2000) as p:
-        soups = p.map(bs_parser, results)
+    with ThreadPoolExecutor(max_workers=100) as p:
+        soups = p.map(bs_parser, params)
 
     stars_and_reviews = {1: [], 2: [], 3: [], 4: [], 5: []}
     counter = 0
