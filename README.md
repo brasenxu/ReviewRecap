@@ -8,7 +8,7 @@
   ![](https://img.shields.io/github/last-commit/MoroccanGemsbok/ReviewRecap)
 
   ![](https://img.shields.io/badge/made%20for-uottahack%205-%239152a3?style=for-the-badge)
-  ![](https://img.shields.io/badge/sleep%20lost%20collectively-12h-yellow?style=for-the-badge)
+  ![](https://img.shields.io/badge/sleep%20lost%20collectively-30h-yellow?style=for-the-badge)
 
 </div>
 
