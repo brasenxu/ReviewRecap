@@ -37,10 +37,6 @@ TLDR: irritated, disappointed
 Passage: Yeah too small
 
 TLDR: small
---
-Passage: Super cute, super soft, super happy! Great for everyday and everyone!
-
-TLDR: cute, soft, happy
 --"""
 
 

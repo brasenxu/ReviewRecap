@@ -24,7 +24,7 @@ def scrape(domain, asin):
     
     params = []
 
-    for i in range(1, 20):
+    for i in range(1, 100):
         params.append({'url': f"{url}pageNumber={i}", 'header': HEADERS})
 
     with ThreadPoolExecutor(max_workers=100) as p:
