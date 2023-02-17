@@ -35,3 +35,6 @@ The backend of the server projects uses Python's Django framework to serve a RES
 ## Chrome Extension
 
 ## Backend Server
+
+## Devpost Submission:
+https://devpost.com/software/bob-gj5h29
